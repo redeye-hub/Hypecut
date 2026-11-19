@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Hypecut</title>
+    <style>
+         :root {
+            --bg: #13151a;
+            --pn: #1c1f26;
+            --ln: #2d313b;
+            --tx: #ecebe6;
+            --mu: #8d919d;
+            --ac: #ff3d6e;
+            --face: #19d3ff;
+            --cont: #ffb020
+        }
+        
+        * {
+            box-sizing: border-box
+        }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--tx);
+            font: 14px/1.45 Bahnschrift, "Segoe UI", system-ui, sans-serif
+        }
+        
+        header {
+            display: flex;
+            gap: 10px;
+            align-items: baseline;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--ln)
+        }
+        
+        header b {
+            font-size: 20px;
+            letter-spacing: .02em
+        }
+        
+        header span {
+            color: var(--mu)
+        }
+        
+        main {
+            display: grid;
+            grid-template-columns: minmax(300px, 1fr) minmax(320px, 1.1fr) 350px;
+            gap: 14px;
+            padding: 14px;
+            align-items: start
+        }
+        
+        @media(max-width:1100px) {
+            main {
+                grid-template-columns: 1fr
+            }
+        }
+        
+        section {
+            background: var(--pn);
+            border: 1px solid var(--ln);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 14px
+        }
+        
+        h3 {
+            margin: 0 0 10px;
+            font-size: 15px;
+            font-weight: 600
+        }
+        
+        input,
+        select,
+        button {
+            font: inherit;
+            color: inherit;
+            background: #12141a;
+            border: 1px solid var(--ln);
+            border-radius: 6px;
+            padding: 7px 9px;
+            min-width: 0
+        }
+        
+        input[type=range] {
+            padding: 0;
+            width: 100%;
+            accent-color: var(--ac)
+        }
+        
+        input[type=checkbox],
+        input[type=radio] {
+            accent-color: var(--ac)
+        }
+        
+        button {
+            cursor: pointer;
+            background: #252932
+        }
+        
+        button:hover {
+            border-color: var(--mu)
+        }
+        
+        button:disabled {
+            opacity: .5;
+            cursor: default
+        }
+        
+        button.p {
+            background: var(--ac);
+            border-color: var(--ac);
+            color: #fff;
+            font-weight: 600
+        }
+        
+         :focus-visible {
+            outline: 2px solid var(--face);
+            outline-offset: 1px
+        }
+        
+        .row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center
+        }
+        
+        .row>* {
+            flex: 1
+        }
+        
+        .row>.s {
+            flex: 0 0 auto
+        }
+        
+        label {
+            display: block;
+            color: var(--mu);
+            font-size: 12.5px;
+            margin: 9px 0 3px
+        }
+        
+        label.i {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            color: var(--tx);
+            margin: 6px 0
+        }
+        
+        .bar {
+            height: 5px;
+            background: #0d0f13;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 6px
+        }
+        
+        .bar i {
+            display: block;
+            height: 100%;
+            background: var(--ac);
+            width: 0;
+            transition: width .3s
+        }
+        
+        .mu {
+            color: var(--mu);
+            font-size: 12.5px
+        }
+        
+        video,
+        #frame {
+            width: 100%;
+            display: block;
+            border-radius: 6px;
+            background: #000
+        }
+        
+        #stage {
+            position: relative;
+            cursor: crosshair;
+            user-select: none;
+            margin-top: 8px
+        }
+        
+        #frame {
+            pointer-events: none
+        }
+        
+        .box {
+            position: absolute;
+            border: 2px solid;
+            pointer-events: none;
+            border-radius: 3px
+        }
+        
+        #bf {
+            border-color: var(--face);
+            background: #19d3ff22
+        }
+        
+        #bc {
+            border-color: var(--cont);
+            background: #ffb02014
+        }
+        
+        .lg {
+            display: flex;
+            gap: 14px;
+            margin-top: 6px;
+            font-size: 12.5px
+        }
+        
+        .lg i {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            margin-right: 5px
+        }
+        
+        #pv {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto 12px;
+            aspect-ratio: 9/16;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--ln)
+        }
+        
+        #pv img {
+            width: 100%;
+            height: 100%;
+            display: block
+        }
+        
+        #cs {
+            position: absolute;
+            left: 6%;
+            right: 6%;
+            text-align: center;
+            font-weight: 700;
+            line-height: 1.15;
+            pointer-events: none
+        }
+        
+        .sg,
+        .q {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--ln)
+        }
+        
+        .sg span {
+            flex: 1
+        }
+        
+        .sg em {
+            font-style: normal;
+            color: var(--mu)
+        }
+        
+        .q div {
+            flex: 1
+        }
+        
+        .q a {
+            color: var(--face)
+        }
+        
+        #lib {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px
+        }
+        
+        #lib div {
+            background: #12141a;
+            border-radius: 6px;
+            padding: 6px
+        }
+        
+        #lib video {
+            aspect-ratio: 9/16;
+            object-fit: cover
+        }
+        
+        #lib .a {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+            font-size: 12.5px
+        }
+        
+        #lib a {
+            color: var(--face);
+            flex: 1
+        }
+        
+        #lib button {
+            padding: 2px 8px
+        }
+        
+        .need {
+            opacity: .35;
+            pointer-events: none
+        }
+        
+        body.ready .need {
+            opacity: 1;
+            pointer-events: auto
+        }
+        /* ===== Hypecut sticker theme start ===== */
+        
+         :root {
+            --bg: #eef0ff;
+            --pn: #ffffff;
+            --ln: #14122b;
+            --tx: #14122b;
+            --mu: #5b5877;
+            --ac: #2f5bff;
+            --ac2: #ffd400;
+            --face: #2f5bff;
+            --cont: #ff7a00;
+            --ink: #14122b;
+            --fld: #f6f7ff
+        }
+        
+        body {
+            background: var(--bg) radial-gradient(#14122b1c 1px, transparent 1.2px) 0 0/20px 20px
+        }
+        
+        header {
+            background: var(--ac2);
+            border-bottom: 3px solid var(--ink);
+            padding: 14px 22px;
+            align-items: center
+        }
+        
+        header b {
+            font: 400 32px/1 "Arial Black", Impact, sans-serif;
+            letter-spacing: -.03em;
+            color: var(--ink);
+            text-shadow: 3px 3px 0 #fff
+        }
+        
+        header span {
+            color: var(--ink);
+            opacity: .8
+        }
+        
+        header::after {
+            content: "";
+            margin-left: auto;
+            width: 128px;
+            height: 24px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='24'%3E%3Crect x='0' y='17' width='5' height='7' rx='2.5' fill='%232f5bff'/%3E%3Crect x='8' y='9' width='5' height='15' rx='2.5' fill='%2314122b'/%3E%3Crect x='16' y='14' width='5' height='10' rx='2.5' fill='%2314122b'/%3E%3Crect x='24' y='3' width='5' height='21' rx='2.5' fill='%232f5bff'/%3E%3Crect x='32' y='11' width='5' height='13' rx='2.5' fill='%2314122b'/%3E%3Crect x='40' y='6' width='5' height='18' rx='2.5' fill='%2314122b'/%3E%3Crect x='48' y='18' width='5' height='6' rx='2.5' fill='%232f5bff'/%3E%3Crect x='56' y='1' width='5' height='23' rx='2.5' fill='%2314122b'/%3E%3Crect x='64' y='12' width='5' height='12' rx='2.5' fill='%2314122b'/%3E%3Crect x='72' y='8' width='5' height='16' rx='2.5' fill='%232f5bff'/%3E%3Crect x='80' y='15' width='5' height='9' rx='2.5' fill='%2314122b'/%3E%3Crect x='88' y='4' width='5' height='20' rx='2.5' fill='%2314122b'/%3E%3Crect x='96' y='10' width='5' height='14' rx='2.5' fill='%232f5bff'/%3E%3Crect x='104' y='16' width='5' height='8' rx='2.5' fill='%2314122b'/%3E%3Crect x='112' y='5' width='5' height='19' rx='2.5' fill='%2314122b'/%3E%3Crect x='120' y='13' width='5' height='11' rx='2.5' fill='%232f5bff'/%3E%3C/svg%3E") repeat-x center
+        }
+        
+        section {
+            background: var(--pn);
+            border: 2px solid var(--ink);
+            border-radius: 12px;
+            box-shadow: 5px 5px 0 var(--ink);
+            padding: 16px
+        }
+        
+        h3 {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--ink)
+        }
+        
+        input,
+        select,
+        button {
+            background: #fff;
+            border: 2px solid var(--ink);
+            border-radius: 8px;
+            padding: 7px 10px;
+            color: var(--ink)
+        }
+        
+        button {
+            background: #fff;
+            box-shadow: 2px 2px 0 var(--ink);
+            font-weight: 600
+        }
+        
+        button:hover {
+            border-color: var(--ink);
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0 var(--ink)
+        }
+        
+        button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0 0 0 var(--ink)
+        }
+        
+        button.p {
+            background: var(--ac);
+            border-color: var(--ink);
+            color: #fff;
+            font-weight: 700
+        }
+        
+         :focus-visible {
+            outline: 3px solid var(--cont);
+            outline-offset: 2px
+        }
+        
+        label {
+            color: var(--mu)
+        }
+        
+        label.i {
+            color: var(--tx)
+        }
+        
+        .bar {
+            height: 12px;
+            background: #fff;
+            border: 2px solid var(--ink);
+            border-radius: 99px
+        }
+        
+        .bar i {
+            background: repeating-linear-gradient(45deg, var(--ac) 0 8px, #6b87ff 8px 16px)
+        }
+        
+        video,
+        #frame {
+            border: 2px solid var(--ink);
+            border-radius: 8px
+        }
+        
+        #bf {
+            background: #2f5bff26
+        }
+        
+        #bc {
+            background: #ff7a001f
+        }
+        
+        .lg i {
+            border: 1.5px solid var(--ink)
+        }
+        
+        .sg,
+        .q {
+            border-bottom: 1px dashed #14122b66
+        }
+        
+        #lib div {
+            background: #fff;
+            border: 2px solid var(--ink);
+            border-radius: 10px
+        }
+        
+        #lib a,
+        .q a {
+            color: var(--ac);
+            font-weight: 600
+        }
+        
+        #pv {
+            border: 3px solid var(--ink);
+            border-radius: 18px;
+            box-shadow: 5px 5px 0 var(--ac)
+        }
+        
+        input[type=range],
+        input[type=checkbox],
+        input[type=radio] {
+            accent-color: var(--ac)
+        }
+        /* about us */
+        
+        #about p {
+            margin: 0 0 12px;
+            max-width: 60ch;
+            color: var(--mu)
+        }
+        
+        .links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px
+        }
+        
+        .links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: 2px solid var(--ink);
+            border-radius: 999px;
+            background: #fff;
+            color: var(--ink);
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 3px 3px 0 var(--dot)
+        }
+        
+        .links a::before {
+            content: "";
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: var(--dot);
+            border: 2px solid var(--ink)
+        }
+        
+        .links a:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 var(--dot)
+        }
+        /* ===== end theme ===== */
+    </style>
+</head>
+
+<body>
+    <header><b>Hypecut</b><span>Clips More!Earns More!</span></header>
+    <main>
+        <div>
+            <section>
+                <h3>Source</h3>
+                <input id="url" style="width:100%" placeholder="Paste a YouTube, Twitch or Kick link">
+                <div class="row" style="margin-top:8px"><select id="q"><option value="720">Up to 720p</option><option value="1080" selected>Up to 1080p</option><option value="1440">Up to 1440p</option></select><button class="p s" id="go">Load video</button></div>
+                <div class="bar"><i id="lbar"></i></div>
+                <div class="mu" id="lmsg"></div>
+            </section>
+            <section class="need">
+                <h3 id="vt">Clip range</h3>
+                <video id="player" controls preload="metadata"></video>
+                <div class="row" style="margin-top:8px"><input id="st" value="0:00:00"><button class="s" id="sets">Start = playhead</button></div>
+                <div class="row"><input id="en" value="0:00:45"><button class="s" id="sete">End = playhead</button></div>
+                <div class="mu" id="len"></div>
+            </section>
+            <section class="need">
+                <h3>Hype moments</h3>
+                <div class="mu">Found from the loudest, most active stretches of audio.</div>
+                <div class="row" style="margin-top:8px"><select id="slen"><option>20</option><option>30</option><option selected>45</option><option>60</option><option>90</option></select><button class="s" id="rescan">Rescan</button><button class="p s" id="batch">Render checked</button></div>
+                <div id="sug"></div>
+            </section>
+        </div>
+
+        <div class="need">
+            <section>
+                <h3>Where things are in the source</h3>
+                <div class="row"><label class="i"><input type="radio" name="tg" value="face" checked>Draw face box</label><label class="i"><input type="radio" name="tg" value="cont">Draw video box</label><button class="s" id="det">Auto-find face</button></div>
+                <div id="stage"><img id="frame" alt="">
+                    <div class="box" id="bf"></div>
+                    <div class="box" id="bc"></div>
+                </div>
+                <div class="lg"><span><i style="background:var(--face)"></i>Face</span><span><i style="background:var(--cont)"></i>Video (full frame by default)</span></div>
+                <div class="mu" style="margin-top:6px">Drag on the frame to redraw the selected box. Each box is centered and cropped to fit its panel.</div>
+            </section>
+            <section>
+                <h3>Clips</h3>
+                <div id="queue" class="mu">Rendered clips appear here.</div>
+            </section>
+        </div>
+
+        <div class="need">
+            <section>
+                <h3>Vertical preview</h3>
+                <div id="pv"><img id="pvimg" alt="">
+                    <div id="cs"></div>
+                </div>
+                <label>Layout</label>
+                <select id="layout" style="width:100%"><option value="split_face_top">Face on top, video below</option><option value="split_face_bottom">Video on top, face below</option><option value="face_only">Face only, fullscreen</option><option value="content_only">Video only, fullscreen</option></select>
+                <label>Face panel height <span id="splv">40%</span></label><input type="range" id="split" min="20" max="70" value="40">
+                <label>Video sizing</label>
+                <select id="cmode" style="width:100%"><option value="fill">Fill panel (crop)</option><option value="fit">Fit whole video (blurred background)</option></select>
+                <label>Video horizontal position (fill only)</label><input type="range" id="xoff" min="0" max="100" value="50">
+            </section>
+            <section>
+                <h3>Captions</h3>
+                <label class="i"><input type="checkbox" id="capon" checked>Burn in captions</label>
+                <div class="row">
+                    <div><label>Style</label><select id="cstyle" style="width:100%"></select></div>
+                    <div><label>Position</label><select id="cpos" style="width:100%"><option value="lower">Lower third</option><option value="center">Center</option><option value="top">Top</option><option value="bottom">Bottom</option></select></div>
+                </div>
+                <label>Size <span id="csv">100%</span></label><input type="range" id="csize" min="60" max="140" value="100">
+                <div class="row">
+                    <div><label>Words per line</label><select id="cwords" style="width:100%"><option value="0">Style default</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+                    <div><label>Language</label><select id="lang" style="width:100%"><option value="">Auto-detect</option><option value="en">English</option><option value="bn">Bengali</option><option value="hi">Hindi</option><option value="es">Spanish</option><option value="ar">Arabic</option><option value="fr">French</option><option value="de">German</option><option value="pt">Portuguese</option><option value="tr">Turkish</option><option value="ru">Russian</option></select></div>
+                </div>
+                <div class="row"><label class="i"><input type="checkbox" id="ccaps">Uppercase</label>
+                    <div><select id="model" style="width:100%"><option value="tiny">Fast (tiny)</option><option value="base" selected>Balanced (base)</option><option value="small">Accurate (small)</option><option value="medium">Best (medium)</option></select></div>
+                </div>
+            </section>
+            <section>
+                <h3>Extras and export</h3>
+                <input id="title" style="width:100%" placeholder="Hook title on top (optional)">
+                <input id="wm" style="width:100%;margin-top:8px" placeholder="Watermark, like @channel (optional)">
+                <label>Quality</label><select id="crf" style="width:100%"><option value="23">Small file</option><option value="20" selected>Balanced</option><option value="17">High quality</option></select>
+                <button class="p" id="render" style="width:100%;margin-top:12px;padding:10px">Render this clip</button>
+            </section>
+        </div>
+    </main>
+    <main style="grid-template-columns:1fr;padding-top:0">
+        <section>
+            <h3>Library</h3>
+            <div id="lib" class="mu">No clips yet.</div>
+        </section>
+    </main>
+
+    <main style="grid-template-columns:1fr;padding-top:0">
+        <section id="about">
+            <h3>About us</h3>
+            <p>Hypecut turns long videos into vertical clips that are ready to post. Write a short line about yourself or your team here.</p>
+            <div class="links">
+                <a href="https://facebook.com/YOUR_PAGE" target="_blank" rel="noopener" style="--dot:#2f5bff">Facebook</a>
+                <a href="https://youtube.com/@YOUR_CHANNEL" target="_blank" rel="noopener" style="--dot:#ff3b3b">YouTube</a>
+                <a href="https://instagram.com/YOUR_NAME" target="_blank" rel="noopener" style="--dot:#ff4fa3">Instagram</a>
+                <a href="https://github.com/YOUR_NAME" target="_blank" rel="noopener" style="--dot:#1fcf8f">GitHub</a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const api = (u, o) => fetch(u, o).then(r => r.json());
+        const post = (u, b) => api(u, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(b)
+        });
+        const f = t => {
+            t = Math.round(t);
+            return `${Math.floor(t/3600)}:${String(Math.floor(t%3600/60)).padStart(2,"0")}:${String(t%60).padStart(2,"0")}`
+        };
+        const pt = s => s.split(":").reduce((a, x) => a * 60 + +x, 0);
+        const cl = v => Math.min(1, Math.max(0, v));
+        const S = {
+            vid: null,
+            dur: 0,
+            face: {
+                x: .7,
+                y: .6,
+                w: .28,
+                h: .36
+            },
+            cont: {
+                x: 0,
+                y: 0,
+                w: 1,
+                h: 1
+            },
+            styles: {},
+            sug: [],
+            q: []
+        };
+        const range = () => {
+            const a = pt($("st").value),
+                b = pt($("en").value);
+            return [a, Math.max(b, a + 3)]
+        };
+
+        /* load */
+        $("go").onclick = async() => {
+            const url = $("url").value.trim();
+            if (!url) return;
+            $("go").disabled = true;
+            $("lbar").style.width = "0";
+            const {
+                id
+            } = await post("/api/load", {
+                url,
+                quality: $("q").value
+            });
+            const t = setInterval(async() => {
+                const j = await api("/api/job/" + id);
+                $("lbar").style.width = j.progress + "%";
+                $("lmsg").textContent = j.message || "";
+                if (j.status === "done") {
+                    clearInterval(t);
+                    loaded(id, j)
+                }
+                if (j.status === "error") {
+                    clearInterval(t);
+                    $("lmsg").textContent = "Could not load: " + j.message;
+                    $("go").disabled = false
+                }
+            }, 800);
+        };
+
+        function loaded(id, j) {
+            S.vid = id;
+            S.dur = j.duration;
+            S.sug = j.suggestions;
+            $("go").disabled = false;
+            $("vt").textContent = j.title;
+            $("player").src = "/api/video/" + id;
+            document.body.classList.add("ready");
+            drawSug();
+            const s = S.sug[0] ? S.sug[0].start : 0;
+            setRange(s, Math.min(s + 45, S.dur), true);
+            autoFace();
+        }
+
+        function setRange(a, b, seek) {
+            $("st").value = f(a);
+            $("en").value = f(b);
+            $("len").textContent = `Length ${Math.round(b-a)}s`;
+            if (seek) $("player").currentTime = a;
+            refreshFrame();
+            sched();
+        }
+        $("sets").onclick = () => {
+            const a = $("player").currentTime;
+            setRange(a, Math.max(pt($("en").value), a + 3))
+        };
+        $("sete").onclick = () => {
+            setRange(pt($("st").value), $("player").currentTime)
+        };
+        $("st").onchange = $("en").onchange = () => {
+            const [a, b] = range();
+            setRange(a, b, true)
+        };
+
+        /* suggestions */
+        function drawSug() {
+            $("sug").innerHTML = S.sug.map((c, i) => `<div class="sg"><input type="checkbox" data-c="${i}" checked><span>${f(c.start)} to ${f(c.end)}</span><em>${c.score}</em><button data-u="${i}">Use</button></div>`).join("");
+        }
+        $("sug").onclick = e => {
+            const i = e.target.dataset.u;
+            if (i != null) {
+                const c = S.sug[i];
+                setRange(c.start, c.end, true)
+            }
+        };
+        $("rescan").onclick = async() => {
+            S.sug = await api(`/api/suggest/${S.vid}?length=${$("slen").value}&count=8`);
+            drawSug()
+        };
+        $("batch").onclick = () => {
+            [...document.querySelectorAll("[data-c]:checked")].forEach(c => {
+                const s = S.sug[c.dataset.c];
+                queue(spec(s.start, s.end))
+            })
+        };
+
+        /* boxes */
+        const stage = $("stage");
+        const place = (el, b) => {
+            el.style.cssText = `left:${b.x*100}%;top:${b.y*100}%;width:${b.w*100}%;height:${b.h*100}%`
+        };
+
+        function drawBoxes() {
+            place($("bf"), S.face);
+            place($("bc"), S.cont)
+        }
+
+        function refreshFrame() {
+            if (S.vid) $("frame").src = `/api/frame/${S.vid}?t=${range()[0]+1}`
+        }
+        $("frame").onload = drawBoxes;
+        stage.onmousedown = e => {
+            e.preventDefault();
+            const r = stage.getBoundingClientRect(),
+                x0 = cl((e.clientX - r.left) / r.width),
+                y0 = cl((e.clientY - r.top) / r.height),
+                k = document.querySelector("[name=tg]:checked").value;
+            const mv = v => {
+                const x = cl((v.clientX - r.left) / r.width),
+                    y = cl((v.clientY - r.top) / r.height),
+                    b = {
+                        x: Math.min(x0, x),
+                        y: Math.min(y0, y),
+                        w: Math.abs(x - x0),
+                        h: Math.abs(y - y0)
+                    };
+                if (b.w > .03 && b.h > .03) {
+                    S[k] = b;
+                    drawBoxes()
+                }
+            };
+            const up = () => {
+                removeEventListener("mousemove", mv);
+                removeEventListener("mouseup", up);
+                sched()
+            };
+            addEventListener("mousemove", mv);
+            addEventListener("mouseup", up);
+        };
+        const faceAspect = () => $("layout").value === "face_only" ? 9 / 16 : 1080 / (1920 * $("split").value / 100);
+        async function autoFace() {
+            const r = await post("/api/detect", {
+                vid: S.vid,
+                t: range()[0] + 1,
+                aspect: faceAspect()
+            });
+            if (r.found) {
+                S.face = r.box;
+                drawBoxes();
+                sched()
+            } else if (S.vid) $("lmsg").textContent = "No face found on this frame. Draw the face box by hand.";
+        }
+        $("det").onclick = autoFace;
+
+        /* preview */
+        let tm;
+        const sched = () => {
+            clearTimeout(tm);
+            tm = setTimeout(preview, 350)
+        };
+        async function preview() {
+            if (!S.vid) return;
+            const [a, b] = range();
+            const r = await fetch("/api/preview", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(spec(a, b, Math.min(a + 1, b)))
+            });
+            if (r.ok) $("pvimg").src = URL.createObjectURL(await r.blob());
+            sample();
+        }
+
+        function sample() {
+            const st = S.styles[$("cstyle").value];
+            if (!st) return;
+            const el = $("cs"),
+                k = $("pv").clientWidth / 1080,
+                c = "#" + st.color,
+                h = "#" + st.hi,
+                o = "#" + st.outline;
+            el.style.display = $("capon").checked ? "block" : "none";
+            el.style.fontFamily = `"${st.font}",sans-serif`;
+            el.style.fontSize = st.size * $("csize").value / 100 * k + "px";
+            el.style.color = c;
+            el.style.webkitTextStroke = st.box ? "0" : Math.max(1, st.ow * k * .8) + "px " + o;
+            el.style.paintOrder = "stroke fill";
+            el.style.background = st.box ? "#000a" : "none";
+            el.style.left = el.style.right = "6%";
+            const caps = $("ccaps").checked;
+            let t = ["THIS", "IS", "HOW", "IT", "LOOKS"].map(w => caps ? w : w.toLowerCase());
+            el.innerHTML = t.slice(0, st.words > 3 ? 5 : 3).map((w, i) => i === 1 ? `<span style="color:${h}">${w}</span>` : w).join(" ");
+            const p = $("cpos").value;
+            el.style.top = el.style.bottom = "auto";
+            if (p === "top") el.style.top = "10%";
+            else if (p === "center") el.style.top = "46%";
+            else el.style.bottom = (p === "lower" ? 22 : 15) + "%";
+        }
+        document.querySelectorAll("#layout,#split,#cmode,#xoff,#capon,#cstyle,#cpos,#csize,#ccaps").forEach(e => e.addEventListener("input", () => {
+            $("splv").textContent = $("split").value + "%";
+            $("csv").textContent = $("csize").value + "%";
+            sched()
+        }));
+        $("cstyle").addEventListener("input", () => {
+            $("ccaps").checked = S.styles[$("cstyle").value].upper
+        });
+
+        /* render */
+        function spec(a, b, t) {
+            return {
+                vid: S.vid,
+                t,
+                start: a,
+                end: b,
+                layout: $("layout").value,
+                face: S.face,
+                content: S.cont,
+                split: $("split").value / 100,
+                content_mode: $("cmode").value,
+                xoff: $("xoff").value / 100,
+                crf: +$("crf").value,
+                title: $("title").value,
+                watermark: $("wm").value,
+                captions: {
+                    enabled: $("capon").checked,
+                    style: $("cstyle").value,
+                    position: $("cpos").value,
+                    size: +$("csize").value,
+                    words: +$("cwords").value,
+                    caps: $("ccaps").checked,
+                    lang: $("lang").value,
+                    model: $("model").value
+                }
+            };
+        }
+        async function queue(s) {
+            const {
+                id
+            } = await post("/api/render", s);
+            S.q.push({
+                id,
+                label: `${f(s.start)} to ${f(s.end)}`,
+                j: {
+                    progress: 0,
+                    message: "Queued"
+                }
+            });
+            drawQ()
+        }
+        $("render").onclick = () => {
+            const [a, b] = range();
+            queue(spec(a, b, a + 1))
+        };
+
+        function drawQ() {
+            $("queue").innerHTML = S.q.slice().reverse().map(x => `<div class="q"><div>${x.label}<div class="bar"><i style="width:${x.j.progress}%"></i></div></div>${x.j.status==="done"?`<a href="/clips/${x.j.file}" target="_blank">Open</a>`:`<span class="mu">${x.j.status==="error"?"Failed: "+x.j.message:x.j.message}</span>`}</div>`).join("")||"Rendered clips appear here.";
+}
+setInterval(async()=>{
+  let ch=false;
+  for(const x of S.q){if(x.j.status==="done"||x.j.status==="error")continue;x.j=await api("/api/job/"+x.id);ch=true;if(x.j.status==="done")lib()}
+  if(ch)drawQ();
+},1000);
+
+/* library */
+async function lib(){
+  const c=await api("/api/clips");
+  $("lib").innerHTML=c.length?c.map(x=>`<div><video src="/clips/${x.name}" controls preload="metadata"></video><div class="a"><a href="/clips/${x.name}?dl=1">Download</a><button data-d="${x.name}">Delete</button></div><div class="mu">${(x.size/1048576).toFixed(1)} MB</div></div>`).join(""):"No clips yet.";
+}
+$("lib").onclick=async e=>{const n=e.target.dataset.d;if(n&&confirm("Delete this clip?")){await fetch("/api/clips/"+n,{method:"DELETE"});lib()}};
+
+/* init */
+(async()=>{
+  S.styles=await api("/api/styles");
+  $("cstyle").innerHTML=Object.entries(S.styles).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("");
+  $("ccaps").checked=S.styles.hormozi.upper;sample();lib();
+})();
+    </script>
+</body>
+
+</html>

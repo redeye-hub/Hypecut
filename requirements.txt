@@ -1,0 +1,5 @@
+flask
+yt-dlp[default,curl-cffi]
+faster-whisper
+numpy
+opencv-python-headless
